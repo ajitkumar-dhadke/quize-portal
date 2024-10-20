@@ -1,0 +1,259 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Quize Portal - OpenAPI 3.0",
+    "description": "This is a Quize Portal Server based on the OpenAPI 3.0 specification.",
+    "contact": {
+      "email": "dhadke.ajitkumar@gmail.com"
+    },
+    "version": "1.0.11"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001",
+      "description": "Local server for Quize Portal"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Quize",
+      "description": "Operations about Quize"
+    },
+    {
+      "name": "Answer",
+      "description": "To Submit the Answer"
+    },
+    {
+      "name": "Result",
+      "description": "Everything about User Result"
+    }
+  ],
+  "paths": {
+    "/api/quize": {
+      "post": {
+        "tags": ["Quize"],
+        "summary": "Add a new Quize to the Database",
+        "description": "Add a new Quize to the Database",
+        "operationId": "addquize",
+        "requestBody": {
+          "description": "Create a new Quize in the Database",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Quize"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Record Created"
+          },
+          "400": {
+            "description": "Invalid Parameters supplied"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Quize"],
+        "summary": "Find Quize-by-ID",
+        "description": "Returns a single Quize",
+        "operationId": "getQuizeById",
+        "parameters": [
+          {
+            "name": "quize_id",
+            "in": "query",
+            "description": "ID of Quize-to-return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data fetched succesfully"
+          },
+          "400": {
+            "description": "Invalid Parameters supplied"
+          },
+          "404": {
+            "description": "Quize not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+
+    "/api/answer": {
+      "post": {
+        "tags": ["Answer"],
+        "summary": "Add a new Answer to the Database",
+        "description": "Add a new Answer to the Database",
+        "operationId": "addanswer",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "ID of User",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Create a new Answer",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Answer"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Record Created"
+          },
+          "400": {
+            "description": "Invalid Parameters supplied"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+
+    "/api/result": {
+      "get": {
+        "tags": ["Result"],
+        "summary": "Find Result by ID",
+        "description": "Returns a single Result",
+        "operationId": "getResultById",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "ID of User",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "quize_id",
+            "in": "query",
+            "description": "ID of Quize",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data fetched succesfully"
+          },
+          "400": {
+            "description": "Invalid Parameters supplied"
+          },
+          "404": {
+            "description": "Quize not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Quize": {
+        "type": "object",
+        "properties": {
+          "quize_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 2
+          },
+          "title": {
+            "type": "string",
+            "description": "Quize-title",
+            "example": "Odd-Man-Out"
+          },
+          "questions": {
+            "type": "array",
+            "xml": {
+              "wrapped": true
+            },
+            "items": {
+              "$ref": "#/components/schemas/Questions"
+            }
+          }
+        }
+      },
+      "Questions": {
+        "type": "object",
+        "properties": {
+          "question_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "text": {
+            "type": "string",
+            "description": "Question Text",
+            "example": "Fruits"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["Mango", "Rose", "Banana", "Kiwi"]
+          },
+          "correct_option": {
+            "type": "integer",
+            "format": "int64",
+            "example": 2,
+            "enum": [1, 2, 3, 4]
+          }
+        }
+      },
+      "Answer": {
+        "type": "object",
+        "properties": {
+          "quize_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "question_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "answer_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          }
+        }
+      }
+    }
+  }
+}
