@@ -36,7 +36,12 @@ Step 3: without swagger / i.e. with postman
 
     * http://localhost:3001/api by adding endpoints
 
-# Guidelines for devlopers
+# Guidelines and Limitation for devlopers and users
 
     -Utilize the built-in .vscode/settings to maintain code formatting by installing the Prettier extension.
     -Avoid hardcoded values in code; instead, define them as constants.
+    -bugs will be fixed by fix branch as flag as per priority
+
+    1. Quize will get auto incremented unique quize_id when created.
+    2. Every Quize should have atleast 5 questions.
+    3. All errors are handled and send as response if triggered.
